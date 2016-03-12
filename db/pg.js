@@ -34,27 +34,26 @@ function showAllMovies (req, res, next){
     })
 }
 
-function addMovies (req, res, next){
-  var poster = req.body.poster;
-  var title = req.body.title;
-  var year = req.body.year;
-  var rated = req.body.rated;
-  var director = req.body.director;
-  var actors = req.body.actors;
-  var plot = req.body.plot;
-  db.any('INSERT INTO movies (poster, title, year, rated, director, actors, plot) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;', [poster, title, year, rated, director, actors, plot])
-    .then((data)=>{
-      res.rows = data;
-      next();
-    })
-    .catch((error)=>{
-      console.log(error);
-    })
+function addMovies(req, res, next) {
+    var poster = req.body.poster;
+    var title = req.body.title;
+    var year = parseInt(req.body.year);
+    var rated = req.body.rated;
+    var director = req.body.director;
+    var actors = req.body.actors;
+    var plot = req.body.plot;
+    db.one('INSERT INTO movies (poster, title, year, rated, director, actors, plot) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [poster, title, year, rated, director, actors, plot])
+        .then((data)=> {
+            res.rows = [data];
+            next();
+        })
+        .catch((error)=> {
+            console.log(error);
+        });
 
 // function showtime
 // db.any(array_agg(s.showtimes)
 // group by m.movie)
-
 
 }
 
